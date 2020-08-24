@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,6 +37,12 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+mongoose.connect('mongodb://127.0.0.1:27017/stipeDemo1', {useNewUrlParser: true});
+
+mongoose.connection.on('connected', function(){
+    console.log('Database Connection connect.');
 });
 
 module.exports = app;
