@@ -42,11 +42,6 @@ var userSchema = new Schema({
     }
 });
 
-userSchema.pre('save', async function(next) {
-    var user = this;
-    user.password = await bcrypt.hash(user.password, 10);
-    next();
-});
 
 var User = mongoose.model('users', userSchema);
 

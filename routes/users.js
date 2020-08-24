@@ -9,7 +9,9 @@ const {
   refund,
   updateUser,
   getAllUsers,
-  deleteUser
+  deleteUser,
+  planList,
+  subscription
 } = require('../controllers/user.contrller')
 
 router.post('/register', register)
@@ -20,6 +22,9 @@ router.post('/refund', refund)
 router.put('/updateUser', updateUser)
 router.delete('/deleteUser',deleteUser)
 router.get('/allUsers', getAllUsers )
+router.get('/planList', planList )
+router.post('/subscription',subscription)
+ 
 module.exports = router;
 
 

@@ -91,3 +91,29 @@ exports.refund = async Obj => {
     }
 }
 
+exports.getPlanList = async () => {
+    try {
+        const plans = await stripe.plans.list({limit: 3});
+        return plans
+
+    } catch (err) {
+        throw err
+    }
+}
+
+exports.subscriptionPlan = async Obj => {
+    try {
+        const subscription = await stripe.subscriptions.create({
+            customer: Obj.customerId,
+            items: [
+              {price: Obj.priceId},
+            ],
+          });
+
+          return subscription
+    } catch (err) {
+        throw err
+    }
+}
+
+

@@ -6,24 +6,25 @@ const { createCustomers,
     createTokens,
     stripeCharges,
     refund,
-    createSource } = require('../services/stripe')
+    createSource,
+    getPlanList, 
+    subscriptionPlan} = require('../services/stripe')
 
 exports.register = async (req, res, next) => {
     try {
 
         let reqBody = req.body
 
-        let newUser = new User(reqBody)
-        let UserData = await newUser.save()
-
         const stripeObj = {
             email: reqBody.email,
             name: reqBody.firstName + " " + reqBody.lastName
         }
-
-
         //stripe:--
         const createCustomerStripe = await createCustomers(stripeObj)
+
+        reqBody.customerId = createCustomerStripe.id
+        let newUser = new User(reqBody)
+        let UserData = await newUser.save()
 
         newStripeLog = new stripeLog(
             {
@@ -78,26 +79,31 @@ exports.login = async (req, res, next) => {
 exports.addCard = async (req, res, next) => {
     try {
         const reqBody = req.body
-
         const reqCard = {
-            number: '4242424242424242',
-            exp_month: 8,
-            exp_year: 2021,
-            cvc: '314',
+            number: reqBody.number,
+            exp_month: reqBody.exp_month,
+            exp_year: reqBody.exp_year,
+            cvc: reqBody.cvc,
         }
 
+        const userDetails = await User.findById(reqBody.userId)
         let tokenData = await createTokens(reqCard)
-
-        console.log("tokenData........", tokenData.id)
 
         let sourceObj = {
             tokenId: tokenData.id,
-            customerId: reqBody.userId
+            customerId: userDetails.customerId
         }
 
         let sourceData = await createSource(sourceObj)
 
-        console.log("sourceData........", sourceData)
+        newStripeLog = new stripeLog(
+            {
+                logs: JSON.stringify(sourceData),
+                userId: reqBody.userId,
+                type: 'createTokens'
+            }
+        )
+        await newStripeLog.save()
 
         res.status(200).send({
             status: "success",
@@ -279,6 +285,60 @@ exports.deleteUser = async (req, res, next) => {
 
         // console.log(data)
 
+    } catch (err) {
+
+        console.log(err)
+        res.status(500).send({
+            status: "faiil",
+            message: "something is wrong backend",
+            error: true,
+            data: err
+        });
+    }
+}
+
+exports.planList = async (req, res, next) => {
+
+    try {
+        const list = await getPlanList()
+
+        res.status(200).send({
+            status: "success",
+            message: "get plan list successfully",
+            error: false,
+            data: list
+        })
+    } catch (err) {
+
+        console.log(err)
+        res.status(500).send({
+            status: "faiil",
+            message: "something is wrong backend",
+            error: true,
+            data: err
+        });
+    }
+}
+
+exports.subscription = async (req, res, next) => {
+    try {
+        const reqBody = req.body
+        const userDetails = await User.findById(reqBody.userId)
+
+        console.log("userDetails.custemerId>>>>>>>>>>",userDetails)
+        const obj = {
+            customerId: userDetails.customerId,
+            priceId: reqBody.priceId
+        }
+
+        const list = await subscriptionPlan(obj)
+
+        res.status(200).send({
+            status: "success",
+            message: "get plan list successfully",
+            error: false,
+            data: list
+        })
     } catch (err) {
 
         console.log(err)
