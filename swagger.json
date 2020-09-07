@@ -1,0 +1,68 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Stripe API",
+    "description": "Stripe API with swager demo",
+    "version": "1.0"
+  },
+  "basePath": "http://localhost:3000/",
+  "produces": ["application/json"],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "x-swagger-router-controller": "home",
+        "operationId": "index",
+        "tags": ["/users"],
+        "description": "[Login 123](https://www.google.com)",
+        "parameters": [{
+          "name": "test",
+          "in": "formData",
+          "type": "array",
+          "collectionFormat": "multi",
+          "items": {
+            "type": "integer"
+           }
+        },
+      { "name": "firstName", "in": "formData", "required": true, "type": "string" },
+      { "name": "lastName", "in": "formData", "required": true, "type": "string" },
+      { "name": "email", "in": "formData", "required": true, "type": "string" },
+      { "name": "password", "in": "formData", "required": true, "type": "string" }
+  ],
+        "responses": {}
+      }
+    },
+    "/bar": {
+       "get": {
+         "x-swagger-router-controller": "bar",
+         "operationId": "impossible",
+         "tags": ["/test"],
+         "description": "",
+         "parameters": [],
+         "responses": {}
+       }
+     }
+  }
+}
+
+
+
+user
+theme 
+notification
+
+
+subscription
+isExpired - status
+
+
+cms
+title
+
+3.15
+The range of lowest scored tags - to - highest scored tags will be shown in a range of colors. This will inform the users regarding the workouts for which tags were performed more vs which were performed less.
+Curren
+
+
+Drills Viewed
+Total Drills Viewed this Week/Month/Year : A count of total videos that the users viewed in the current week/month/year will be shown here.
+
